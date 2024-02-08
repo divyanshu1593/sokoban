@@ -1,4 +1,6 @@
 #board {
   border: 1px solid black;
   margin: auto;
+  display: grid;
+  grid-gap: 0px;
 }

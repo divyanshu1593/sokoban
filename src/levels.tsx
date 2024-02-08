@@ -1,4 +1,6 @@
-export type levelType = number[][];
+import { SquareEnum } from "./enum/square.enum";
+
+export type levelType = SquareEnum[][];
 export type levelsType = {
   [key: string]: levelType;
 }
