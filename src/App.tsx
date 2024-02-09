@@ -11,11 +11,64 @@ import { levelType, levels } from './levels';
 
 function App() {
   return (
-    <Board level={levels.level1}/>
+    <Levels />
+  );
+}
+
+function Levels() {
+  console.log('rendering Levels');
+  const [level, setLevel] = useState(levels.level1);
+  const [showBoard, setShowBoard] = useState(false);
+  const [reset, setReset] = useState(0);
+
+  function clickHandler(lvl: levelType) {
+    setLevel(lvl);
+    setShowBoard(true);
+  }
+
+  const levelBtns = [];
+  for (let levelKey in levels) {
+    levelBtns.push(<LevelBtn 
+      levelNumber={+levelKey.slice(5)}
+      lvl={levels[levelKey]}
+      clickHandler={clickHandler}
+    />);
+  }
+
+  if (!showBoard) {
+    return (
+      <>
+        {levelBtns}
+      </>
+    );
+  }
+
+    return (
+    <>
+      <button onClick={() => setShowBoard(false)}>Levels</button>
+      <button onClick={() => setReset(reset + 1)}>reset</button>
+      <Board level={structuredClone(level)}/>
+    </>
+  );
+}
+
+function LevelBtn({ levelNumber, lvl, clickHandler }: {
+  levelNumber: number,
+  lvl: levelType,
+  clickHandler: (lvl: levelType) => void
+}) {
+  return (
+    <button
+    onClick={() => {
+      return clickHandler(lvl)
+    }}
+    >{ levelNumber }</button>
   );
 }
 
 function Board({ level }: {level: levelType}) {
+  console.log('rendering board with level:');
+  console.log(level);
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(level);
   const [hasWon, setHasWon] = useState(false);
@@ -121,7 +174,6 @@ function Board({ level }: {level: levelType}) {
     
     if (isWin(updatedState)) {
       setHasWon(true);
-      document.removeEventListener('keydown', keyhandler);
     }
   }
 
@@ -165,6 +217,7 @@ function Board({ level }: {level: levelType}) {
           height: `${boardDimentions}vh`,
           width: `${boardDimentions}vh`,
           gridTemplateColumns: `repeat(${level[0].length}, 1fr)`,
+          gridTemplateRows: `repeat(${level.length}, 1fr)`,
         }}
       >
         {squares}
