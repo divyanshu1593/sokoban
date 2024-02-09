@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './App.css';
 import { SquareEnum } from './enum/square.enum';
 import GroundGravel_Grass from './images/GroundGravel_Grass.png';
@@ -11,13 +11,14 @@ import { levelType, levels } from './levels';
 
 function App() {
   return (
-    <Board level={levels.level6}/>
+    <Board level={levels.level1}/>
   );
 }
 
 function Board({ level }: {level: levelType}) {
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(level);
+  const [hasWon, setHasWon] = useState(false);
   const squares: JSX.Element[] = [];
 
   for (let row of levelState) {
@@ -99,8 +100,8 @@ function Board({ level }: {level: levelType}) {
           state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
         } else {
           state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
-
         }
+
         return state;
       }
 
@@ -109,30 +110,67 @@ function Board({ level }: {level: levelType}) {
     return state;
   }
 
-  const keyhandler = (event: KeyboardEvent) => {
-    if (event.repeat) return ;
+  const wonRef = useRef<boolean>();
+  wonRef.current = hasWon;
+
+  const keyhandler = function(event: KeyboardEvent) {
+    if (event.repeat || wonRef.current) return ;
 
     const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
     setLevelState(updatedState);
+    
+    if (isWin(updatedState)) {
+      setHasWon(true);
+      document.removeEventListener('keydown', keyhandler);
+    }
   }
 
 
   useEffect(() => {
-    document.addEventListener('keydown', keyhandler)
+    document.addEventListener('keydown', keyhandler);
     return () => document.removeEventListener('keydown', keyhandler);
   }, []);
 
+  function isWin(state: levelType): boolean {
+    for (let row of state){
+      for (let j of row){
+        if (j === SquareEnum.VALID_SPACE || j === SquareEnum.PLAYER_AT_VALID_SPACE) return false;
+      }
+    }
+
+    return true;
+  }
+
+  function WinMessage() {
+    if (hasWon) {
+      return (
+        <div style={{
+          textAlign: 'center',
+          fontWeight: 900,
+          fontSize: '3em',
+          padding: '5vh'
+        }}>
+          You have won the game!
+        </div>
+      );
+    }
+    return (<></>);
+  }
+
   return (
-    <div 
-      id='board'
-      style={{
-        height: `${boardDimentions}vh`,
-        width: `${boardDimentions}vh`,
-        gridTemplateColumns: `repeat(${level[0].length}, 1fr)`,
-      }}
-    >
-      {squares}
-    </div>
+    <>
+      <div 
+        id='board'
+        style={{
+          height: `${boardDimentions}vh`,
+          width: `${boardDimentions}vh`,
+          gridTemplateColumns: `repeat(${level[0].length}, 1fr)`,
+        }}
+      >
+        {squares}
+      </div>
+      <WinMessage />
+    </>
   );
 }
 
