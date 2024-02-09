@@ -11,7 +11,7 @@ import { levelType, levels } from './levels';
 
 function App() {
   return (
-    <Board level={levels.level1}/>
+    <Board level={levels.level6}/>
   );
 }
 
@@ -99,8 +99,8 @@ function Board({ level }: {level: levelType}) {
           state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
         } else {
           state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
-        }
 
+        }
         return state;
       }
 
@@ -109,13 +109,17 @@ function Board({ level }: {level: levelType}) {
     return state;
   }
 
-  useEffect(() => {
-    document.addEventListener('keydown', (event) => {
-      if (event.repeat) return ;
+  const keyhandler = (event: KeyboardEvent) => {
+    if (event.repeat) return ;
 
-      const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
-      setLevelState(updatedState);
-    })
+    const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
+    setLevelState(updatedState);
+  }
+
+
+  useEffect(() => {
+    document.addEventListener('keydown', keyhandler)
+    return () => document.removeEventListener('keydown', keyhandler);
   }, []);
 
   return (
