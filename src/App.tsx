@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { SquareEnum } from './enum/square.enum';
 import GroundGravel_Grass from './images/GroundGravel_Grass.png';
@@ -8,7 +8,6 @@ import CrateDark_Blue from './images/CrateDark_Blue.png';
 import EndPoint_Blue from './images/EndPoint_Blue.png';
 import Character from './images/Character.png';
 import { levelType, levels } from './levels';
-import { log } from 'console';
 
 function App() {
   return (
@@ -23,11 +22,7 @@ function Board({ level }: {level: levelType}) {
 
   for (let row of levelState) {
     for (let state of row){
-      squares.push(<Square 
-        value={state}
-        height={boardDimentions / level.length}
-        width={boardDimentions / level[0].length}
-        />);
+      squares.push(<Square value={state} />);
     }
   }
 
@@ -38,11 +33,11 @@ function Board({ level }: {level: levelType}) {
 
   function findPlayerPosition(state: levelType) {
     for (let i = 0; i < state.length; i++){
-        for (let j = 0; j < state[0].length; j++){
-            if (state[i][j] === SquareEnum.BOX_AT_EMPTY_SPACE || state[i][j] === SquareEnum.PLAYER_AT_VALID_SPACE) {
-                return {i, j}
-            }
+      for (let j = 0; j < state[0].length; j++){
+        if (state[i][j] === SquareEnum.PLAYER_AT_EMPTY_SPACE || state[i][j] === SquareEnum.PLAYER_AT_VALID_SPACE) {
+          return {i, j}
         }
+      }
     }
   }
 
@@ -50,99 +45,78 @@ function Board({ level }: {level: levelType}) {
     state = state.slice();
     let a = 0, b = 0;
     if (event.key === 'ArrowUp'){
-        a = -1;
-        b = 0;
+      a = -1;
+      b = 0;
     } else if (event.key === 'ArrowLeft'){
-        a = 0;
-        b = -1;
+      a = 0;
+      b = -1;
     } else if (event.key === 'ArrowDown'){
-        a = 1;
-        b = 0;
+      a = 1;
+      b = 0;
     } else if (event.key === 'ArrowRight'){
-        a = 0;
-        b = 1;
+      a = 0;
+      b = 1;
     }
 
     let cur = state[playerPos.i][playerPos.j];
     let nextInDir = state[playerPos.i + a][playerPos.j + b];
 
-    if (nextInDir === SquareEnum.EMPTY_SPACE || nextInDir === SquareEnum.VALID_SPACE){
-        if (cur === SquareEnum.PLAYER_AT_EMPTY_SPACE){
-            state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
-        } else {
-            state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
-        }
-        if (nextInDir === SquareEnum.EMPTY_SPACE){
-            state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_EMPTY_SPACE;
-        } else {
-            state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
-        }
+    if (nextInDir === SquareEnum.EMPTY_SPACE || nextInDir === SquareEnum.VALID_SPACE) {
+      if (cur === SquareEnum.PLAYER_AT_EMPTY_SPACE) {
+        state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
+      } else {
+        state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
+      }
+      if (nextInDir === SquareEnum.EMPTY_SPACE){
+        state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_EMPTY_SPACE;
+      } else {
+        state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
+      }
 
-        return state;
+      return state;
     }
     
     if (nextInDir === SquareEnum.WALL){
-        return state;
+      return state;
     }
     
     if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE || nextInDir === SquareEnum.BOX_AT_VALID_SPACE){
+      let n2nInDir = state[playerPos.i + (2 * a)][playerPos.j + (2 * b)];
+      if (n2nInDir === SquareEnum.EMPTY_SPACE || n2nInDir === SquareEnum.VALID_SPACE){
+        if (n2nInDir === SquareEnum.EMPTY_SPACE){
+          state[playerPos.i + (2 * a)][playerPos.j + (2 * b)] = SquareEnum.BOX_AT_EMPTY_SPACE;
+        } else {
+          state[playerPos.i + (2 * a)][playerPos.j + (2 * b)] = SquareEnum.BOX_AT_VALID_SPACE;
+        }
 
-        let n2nInDir = state[playerPos.i + (2 * a)][playerPos.j + (2 * b)];
-        if (n2nInDir === SquareEnum.EMPTY_SPACE || n2nInDir === SquareEnum.VALID_SPACE){
-            if (n2nInDir === SquareEnum.EMPTY_SPACE){
-                state[playerPos.i + (2 * a)][playerPos.j + (2 * b)] = SquareEnum.BOX_AT_EMPTY_SPACE;
-            } else {
-                state[playerPos.i + (2 * a)][playerPos.j + (2 * b)] = SquareEnum.BOX_AT_VALID_SPACE;
-            }
+        if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE){
+          state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_EMPTY_SPACE;
+        } else {
+          state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
+        }
 
-            if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE){
-                state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_EMPTY_SPACE;
-            } else {
-                state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
-            }
-
-            if (cur === SquareEnum.PLAYER_AT_EMPTY_SPACE){
-                state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
-            } else {
-                state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
-            }
-
-            return state;
+        if (cur === SquareEnum.PLAYER_AT_EMPTY_SPACE){
+          state[playerPos.i][playerPos.j] = SquareEnum.EMPTY_SPACE;
+        } else {
+          state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
         }
 
         return state;
+      }
+
+      return state;
     }
     return state;
   }
 
-  function show(state: levelType) {
-    for (let i of state) {
-      let temp = [];
+  useEffect(() => {
+    document.addEventListener('keydown', (event) => {
+      if (event.repeat) return ;
 
-      for (let j of i) {
-        if (j == SquareEnum.VALID_SPACE){
-            temp.push(991);
-        } else if (j == SquareEnum.EMPTY_SPACE){
-            temp.push(32);
-        } else if (j == SquareEnum.WALL){
-            temp.push(9608);
-        } else if (j == SquareEnum.BOX_AT_EMPTY_SPACE){
-            temp.push(9633);
-        } else if (j == SquareEnum.BOX_AT_VALID_SPACE){
-            temp.push(9632);
-        } else if (j == SquareEnum.PLAYER_AT_EMPTY_SPACE || j == SquareEnum.PLAYER_AT_VALID_SPACE){
-            temp.push(64);
-        }
-        temp.push(32)
-    }
-    console.log(String.fromCharCode(...temp));
-  }
-}
-
-  document.addEventListener('keyup', (event) => {
-    const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
-    setLevelState(updatedState);
-  })
+      const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
+      setLevelState(updatedState);
+    })
+  }, []);
 
   return (
     <div 
@@ -158,11 +132,7 @@ function Board({ level }: {level: levelType}) {
   );
 }
 
-function Square({ value, height, width }: { 
-  value: SquareEnum,
-  height: number,
-  width: number,
-}) {
+function Square({ value }: { value: SquareEnum }) {
   if (value === SquareEnum.EMPTY_SPACE) {
     return (<img 
       src={GroundGravel_Grass} 
