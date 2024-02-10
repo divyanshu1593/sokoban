@@ -16,10 +16,9 @@ function App() {
 }
 
 function Levels() {
-  console.log('rendering Levels');
   const [level, setLevel] = useState(levels.level1);
   const [showBoard, setShowBoard] = useState(false);
-  const [reset, setReset] = useState(0);
+  const [reset, setReset] = useState(false);
 
   function clickHandler(lvl: levelType) {
     setLevel(lvl);
@@ -46,8 +45,11 @@ function Levels() {
     return (
     <>
       <button onClick={() => setShowBoard(false)}>Levels</button>
-      <button onClick={() => setReset(reset + 1)}>reset</button>
-      <Board level={structuredClone(level)}/>
+      <button onClick={() => {
+        setReset(true);
+        setTimeout(() => setReset(false));
+      }}>reset</button>
+      {!reset && <Board level={structuredClone(level)}/>}
     </>
   );
 }
@@ -67,15 +69,13 @@ function LevelBtn({ levelNumber, lvl, clickHandler }: {
 }
 
 function Board({ level }: {level: levelType}) {
-  console.log('rendering board with level:');
-  console.log(level);
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(level);
   const [hasWon, setHasWon] = useState(false);
   const squares: JSX.Element[] = [];
 
   for (let row of levelState) {
-    for (let state of row){
+    for (let state of row) {
       squares.push(<Square value={state} />);
     }
   }
