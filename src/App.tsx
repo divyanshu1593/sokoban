@@ -95,19 +95,19 @@ function Board({ level }: {level: levelType}) {
     }
   }
 
-  function handleMove(event: KeyboardEvent, state: levelType, playerPos: playerPos): levelType {
+  function handleMove(dir: string, state: levelType, playerPos: playerPos): levelType {
     state = state.slice();
     let a = 0, b = 0;
-    if (event.key === 'ArrowUp'){
+    if (dir === 'up'){
       a = -1;
       b = 0;
-    } else if (event.key === 'ArrowLeft'){
+    } else if (dir === 'left'){
       a = 0;
       b = -1;
-    } else if (event.key === 'ArrowDown'){
+    } else if (dir === 'down'){
       a = 1;
       b = 0;
-    } else if (event.key === 'ArrowRight'){
+    } else if (dir === 'right'){
       a = 0;
       b = 1;
     }
@@ -169,14 +169,20 @@ function Board({ level }: {level: levelType}) {
   const keyhandler = function(event: KeyboardEvent) {
     if (event.repeat || wonRef.current) return ;
 
-    const updatedState = handleMove(event, levelState, findPlayerPosition(levelState) as playerPos);
+    if (event.key === 'ArrowUp') updateMove('up');
+    if (event.key === 'ArrowDown') updateMove('down');
+    if (event.key === 'ArrowLeft') updateMove('left');
+    if (event.key === 'ArrowRight') updateMove('right');
+  }
+
+  function updateMove(dir: string) {
+    const updatedState = handleMove(dir, levelState, findPlayerPosition(levelState) as playerPos);
     setLevelState(updatedState);
     
     if (isWin(updatedState)) {
       setHasWon(true);
     }
   }
-
 
   useEffect(() => {
     document.addEventListener('keydown', keyhandler);
