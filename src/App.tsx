@@ -228,7 +228,7 @@ function Board({ level }: {level: levelType}) {
     updateBoardSize();
     return () => {
       window.removeEventListener('keydown', keyhandler);
-      window.addEventListener('resize', updateBoardSize);
+      window.removeEventListener('resize', updateBoardSize);
     }
   }, []);
 
