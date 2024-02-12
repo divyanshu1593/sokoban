@@ -72,8 +72,34 @@ function Board({ level }: {level: levelType}) {
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(level);
   const [hasWon, setHasWon] = useState(false);
+  const [boardHeight, setBoardHeight] = useState('');
+  const [boardWidth, setBoardWidth] = useState('');
   const squares: JSX.Element[] = [];
 
+  function updateBoardSize() {
+    const numOfColumns = level[0].length;
+    const numOfRows = level.length;
+
+    function resize(unit: 'vh' | 'vw') {
+      if (numOfColumns < numOfRows) {
+        setBoardWidth((boardDimentions * numOfColumns) / numOfRows + unit);
+      } else {
+        setBoardWidth(boardDimentions + unit);
+      }
+      if (numOfColumns > numOfRows) {
+        setBoardHeight((boardDimentions * numOfRows) / numOfColumns + unit);
+      } else {
+        setBoardHeight(boardDimentions + unit);
+      }
+    }
+
+    if (window.innerHeight > window.innerWidth) {
+      resize('vw');
+    } else {
+      resize('vh');
+    }
+  }
+  
   for (let row of levelState) {
     for (let state of row) {
       squares.push(<Square value={state} />);
@@ -185,8 +211,13 @@ function Board({ level }: {level: levelType}) {
   }
 
   useEffect(() => {
-    document.addEventListener('keydown', keyhandler);
-    return () => document.removeEventListener('keydown', keyhandler);
+    window.addEventListener('keydown', keyhandler);
+    window.addEventListener('resize', updateBoardSize);
+    updateBoardSize();
+    return () => {
+      window.removeEventListener('keydown', keyhandler);
+      window.addEventListener('resize', updateBoardSize);
+    }
   }, []);
 
   function isWin(state: levelType): boolean {
@@ -220,10 +251,10 @@ function Board({ level }: {level: levelType}) {
       <div 
         id='board'
         style={{
-          height: `${boardDimentions}vh`,
-          width: `${boardDimentions}vh`,
-          gridTemplateColumns: `repeat(${level[0].length}, 1fr)`,
-          gridTemplateRows: `repeat(${level.length}, 1fr)`,
+          height: boardHeight,
+          width: boardWidth,
+          gridTemplateColumns: `repeat(${level[0].length}, minmax(0, 1fr))`,
+          gridTemplateRows: `repeat(${level.length}, minmax(0, 1fr))`,
         }}
       >
         {squares}
