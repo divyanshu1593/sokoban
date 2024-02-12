@@ -10,10 +10,21 @@ import Character from './images/Character.png';
 import BackLogo from './images/back.svg';
 import ResetLogo from './images/reset.svg';
 import { levelType, levels } from './levels';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { WelcomeScreen } from './components/welcome-screen.component';
+import { Signin } from './components/signin.component';
+import { Signup } from './components/signup.component';
 
 function App() {
   return (
-    <Levels />
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<WelcomeScreen />} />
+        <Route path='/levels' element={<Levels />} />
+        <Route path='/signin' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
