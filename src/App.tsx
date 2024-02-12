@@ -7,6 +7,8 @@ import CrateDark_Brown from './images/CrateDark_Brown.png';
 import CrateDark_Blue from './images/CrateDark_Blue.png';
 import EndPoint_Blue from './images/EndPoint_Blue.png';
 import Character from './images/Character.png';
+import BackLogo from './images/back.svg';
+import ResetLogo from './images/reset.svg';
 import { levelType, levels } from './levels';
 
 function App() {
@@ -17,11 +19,13 @@ function App() {
 
 function Levels() {
   const [level, setLevel] = useState(levels.level1);
+  const [levelNum, setLevelNum] = useState(1);
   const [showBoard, setShowBoard] = useState(false);
   const [reset, setReset] = useState(false);
 
-  function clickHandler(lvl: levelType) {
+  function clickHandler(lvl: levelType, lvlNum: number) {
     setLevel(lvl);
+    setLevelNum(lvlNum);
     setShowBoard(true);
   }
 
@@ -37,32 +41,40 @@ function Levels() {
   if (!showBoard) {
     return (
       <>
-        {levelBtns}
+        <div className='message'>Levels</div>
+        <div id='level-btns-container'>
+          {levelBtns}
+        </div>
       </>
     );
   }
 
-    return (
-    <>
-      <button onClick={() => setShowBoard(false)}>Levels</button>
-      <button onClick={() => {
-        setReset(true);
-        setTimeout(() => setReset(false));
-      }}>reset</button>
-      {!reset && <Board level={structuredClone(level)}/>}
-    </>
+  return (
+  <>
+    <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
+      <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
+    </button>
+    <button className='logo-btn' id='reset-logo-btn' onClick={() => {
+      setReset(true);
+      setTimeout(() => setReset(false));
+    }}>
+      <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
+    </button>
+    <div className='message'>Level {levelNum}</div>
+    {!reset && <Board level={structuredClone(level)}/>}
+  </>
   );
 }
 
 function LevelBtn({ levelNumber, lvl, clickHandler }: {
   levelNumber: number,
   lvl: levelType,
-  clickHandler: (lvl: levelType) => void
+  clickHandler: (lvl: levelType, lvlNum: number) => void
 }) {
   return (
-    <button
+    <button id='level-btns'
     onClick={() => {
-      return clickHandler(lvl)
+      return clickHandler(lvl, levelNumber)
     }}
     >{ levelNumber }</button>
   );
@@ -168,8 +180,8 @@ function Board({ level }: {level: levelType}) {
         } else {
           state[playerPos.i + (2 * a)][playerPos.j + (2 * b)] = SquareEnum.BOX_AT_VALID_SPACE;
         }
-
         if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE){
+
           state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_EMPTY_SPACE;
         } else {
           state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
@@ -230,22 +242,6 @@ function Board({ level }: {level: levelType}) {
     return true;
   }
 
-  function WinMessage() {
-    if (hasWon) {
-      return (
-        <div style={{
-          textAlign: 'center',
-          fontWeight: 900,
-          fontSize: '3em',
-          padding: '5vh'
-        }}>
-          You have won the game!
-        </div>
-      );
-    }
-    return (<></>);
-  }
-
   return (
     <>
       <div 
@@ -259,7 +255,7 @@ function Board({ level }: {level: levelType}) {
       >
         {squares}
       </div>
-      <WinMessage />
+      {hasWon && <div className='message'>You have won the game!</div>}
     </>
   );
 }
