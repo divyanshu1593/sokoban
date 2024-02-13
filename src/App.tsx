@@ -42,8 +42,10 @@ function Levels() {
 
   const levelBtns = [];
   for (let levelKey in levels) {
+    const levelNumber = +levelKey.slice(5);
     levelBtns.push(<LevelBtn 
-      levelNumber={+levelKey.slice(5)}
+      key={levelNumber}
+      levelNumber={levelNumber}
       lvl={levels[levelKey]}
       clickHandler={clickHandler}
     />);
@@ -123,9 +125,9 @@ function Board({ level }: {level: levelType}) {
     }
   }
   
-  for (let row of levelState) {
-    for (let state of row) {
-      squares.push(<Square value={state} />);
+  for (let i = 0; i < levelState.length; i++) {
+    for (let j = 0; j < levelState[0].length; j++) {
+      squares.push(<Square key={`${i}_${j}`} value={levelState[i][j]} />);
     }
   }
 
