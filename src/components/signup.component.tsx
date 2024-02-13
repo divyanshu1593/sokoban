@@ -11,7 +11,7 @@ export function Signup() {
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;
 
-    const res = await (await fetch('http://localhost:3000/signup', {
+    const res = await (await fetch('http://localhost:3000/auth/signup', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
@@ -20,8 +20,8 @@ export function Signup() {
     })).json();
     
     if (res.isError) {
-      alert('username already exists');
       if (res.message.message === 'username already exist') {
+        alert('username already exists');
         return ;
       }
       alert('signup failed');

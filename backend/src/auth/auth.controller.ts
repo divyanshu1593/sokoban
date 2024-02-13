@@ -13,7 +13,6 @@ export class AuthController {
   async signup(
     @Body() userCredentialsDto: UserCredentialsDto,
   ): Promise<CustomResponse<InsertResult>> {
-    console.log(userCredentialsDto);
     return {
       isError: false,
       message: '',
