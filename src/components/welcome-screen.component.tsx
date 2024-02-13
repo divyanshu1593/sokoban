@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export function WelcomeScreen() {
+export const WelcomeScreen = () => {
   return (
     <>
       Sokoban

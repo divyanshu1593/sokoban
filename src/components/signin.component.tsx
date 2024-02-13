@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-export function Signin() {
+export const Signin = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
