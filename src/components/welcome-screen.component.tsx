@@ -6,6 +6,7 @@ export const WelcomeScreen = () => {
   const user = useAppSelector(state => state.user.value);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   return (
     <>
       Sokoban
@@ -13,6 +14,7 @@ export const WelcomeScreen = () => {
       {!user && <button onClick={() => navigate('signin')}>signin</button>}
       {!user && <button onClick={() => navigate('signup')}>signup</button>}
       {user && <button onClick={() => dispatch(signout())}>sign out</button>}
+      {user && <>Welcome {JSON.parse(user).username}</>}
     </>
   );
 }
