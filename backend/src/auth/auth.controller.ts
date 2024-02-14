@@ -4,10 +4,14 @@ import { UserCredentialsDto } from './dto/user-credentials.dto';
 import { CustomResponse } from 'src/types/response.type';
 import { InsertResult } from 'typeorm';
 import { UserRepository } from 'src/repository/user.repository';
+import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private userRepository: UserRepository) {}
+  constructor(
+    private userRepository: UserRepository,
+    private authService: AuthService,
+  ) {}
 
   @Post('signup')
   async signup(
@@ -22,7 +26,11 @@ export class AuthController {
 
   @Post('signin')
   @UseGuards(LocalAuthGuard)
-  signin(@Request() request) {
-    return request.user;
+  signin(@Request() request): CustomResponse<string> {
+    return {
+      isError: false,
+      message: '',
+      data: this.authService.getJwtToken({ ...request.user }),
+    };
   }
 }
