@@ -1,12 +1,18 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
+import { signout } from "../state-slices/user.slice";
 
 export const WelcomeScreen = () => {
+  const user = useAppSelector(state => state.user.value);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   return (
     <>
       Sokoban
-      <button><Link to='levels'>play</Link></button>
-      <button><Link to='signin'>signin</Link></button>
-      <button><Link to='signup'>signup</Link></button>
+      <button onClick={() => navigate('levels')}>play</button>
+      {!user && <button onClick={() => navigate('signin')}>signin</button>}
+      {!user && <button onClick={() => navigate('signup')}>signup</button>}
+      {user && <button onClick={() => dispatch(signout())}>sign out</button>}
     </>
   );
 }
