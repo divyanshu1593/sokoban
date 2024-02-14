@@ -51,7 +51,7 @@ export const Levels = () =>  {
       <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
     </button>
     <div className='message'>Level {levelNum}</div>
-    {!reset && <Board level={structuredClone(level)}/>}
+    {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
   </>
   );
 }

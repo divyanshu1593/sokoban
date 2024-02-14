@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { levelType } from "../levels";
 import { Square } from "./square.component";
 import { SquareEnum } from "../enum/square.enum";
+import { useAppSelector } from "../hooks/redux-hooks";
 
-export const Board = ({ level }: {level: levelType}) => {
+export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(level);
   const [hasWon, setHasWon] = useState(false);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
+  const jwtToken = useAppSelector(state => state.user.value);
   const squares: JSX.Element[] = [];
 
   function updateBoardSize() {
@@ -142,6 +144,16 @@ export const Board = ({ level }: {level: levelType}) => {
     
     if (isWin(updatedState)) {
       setHasWon(true);
+      fetch('http://localhost:3000/add-crossed-level', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify({
+          levelCrossed: levelNumber,
+        }),
+      });
     }
   }
 

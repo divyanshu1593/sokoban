@@ -1,4 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../redux-store";
+import { jwtDecode } from "jwt-decode";
+import { UserJwtPayload } from "../interface/user-jwt-payload.interface";
 
 interface UserState {
   value: string;
@@ -21,6 +24,12 @@ export const userSlice = createSlice({
     }
   }
 });
+
+export const selectPayload = (state: RootState) => {
+  const userJwtToken = state.user.value;
+  if (!userJwtToken) return ;
+  return jwtDecode<UserJwtPayload>(userJwtToken);
+}
 
 export const { signin, signout } = userSlice.actions;
 

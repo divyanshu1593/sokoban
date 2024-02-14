@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks/redux-hooks";
-import { signout } from "../state-slices/user.slice";
+import { selectPayload, signout } from "../state-slices/user.slice";
 
 export const WelcomeScreen = () => {
-  const user = useAppSelector(state => state.user.value);
+  const user = useAppSelector(selectPayload);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ export const WelcomeScreen = () => {
       {!user && <button onClick={() => navigate('signin')}>signin</button>}
       {!user && <button onClick={() => navigate('signup')}>signup</button>}
       {user && <button onClick={() => dispatch(signout())}>sign out</button>}
-      {user && <>Welcome {JSON.parse(user).username}</>}
+      {user && <>Welcome {user.username}</>}
     </>
   );
 }

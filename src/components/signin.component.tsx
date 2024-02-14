@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { signin } from "../state-slices/user.slice";
 import { useAppDispatch } from "../hooks/redux-hooks";
-import { jwtDecode } from "jwt-decode";
 
 export const Signin = () => {
   const usernameRef = useRef<HTMLInputElement>(null);
@@ -33,13 +32,12 @@ export const Signin = () => {
       }
 
       alert('signin done');
-      const jwtPayload = jwtDecode(res.data);
-      dispatch(signin(JSON.stringify(jwtPayload)));
+      dispatch(signin(res.data));
       navigate('/');
     } catch (err) {
       console.log(err);
       alert('signin not done');
-    }
+    } 
       
   }
   return (
