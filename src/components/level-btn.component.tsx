@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { levelType } from "../levels";
+import WinCrate from '../images/CrateDark_Blue.png';
 
 export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
   levelNumber: number,
@@ -34,7 +35,7 @@ export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
     return (
       <button id='level-btns'
       style={{
-        backgroundColor: 'green',
+        backgroundImage: `url(${WinCrate})`,
       }}
       onClick={() => {
         return clickHandler(lvl, levelNumber);

@@ -1,6 +1,7 @@
 body {
   padding: 0px;
   margin: 0px;
+  background-image: url('./images/GroundGravel_Grass.png');
 }
 
 #board {
@@ -19,8 +20,16 @@ body {
 }
 
 #level-btns {
-  padding: 50%;
+  aspect-ratio: 1 / 1;
   width: 100%;
+  background-image: url('./images/CrateDark_Brown.png');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border: none;
+  cursor: pointer;
+  font-size: 3em;
+  color: black;
+  font-weight: bold;
 }
 
 .message {
@@ -128,8 +137,6 @@ body {
 }
 
 #main-welcome-screen {
-  height: 90vh;
-  background-image: url('./images/GroundGravel_Grass.png');
   text-align: center;
 }
 
