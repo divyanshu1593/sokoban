@@ -31,12 +31,13 @@ export const Signup = () => {
     navigate('/');
   }
   return (
-    <>
+    <div className="auth-box">
+      <div className="login-box-items">SignUp</div>
       <form>
-        username: <input ref={usernameRef} type="text" id="username" required/>
-        password: <input ref={passwordRef} type="password" id="password" required/>
-        <input type="submit" onClick={(event) => clickHandler(event)}/>
+        <div className="login-box-items">username: <input className="login-box-input" ref={usernameRef} type="text" id="username" required/></div>
+        <div className="login-box-items">password: <input className="login-box-input" ref={passwordRef} type="password" id="password" required/></div>
+        <div className="login-box-items"><input className="submit-btn" type="submit" onClick={(event) => clickHandler(event)}/></div>
       </form>
-    </>
+    </div>
   );
 }

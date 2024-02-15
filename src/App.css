@@ -5,11 +5,9 @@ body {
 }
 
 #board {
-  border: 1px solid black;
   margin: auto;
   display: grid;
   grid-gap: 0px;
-  border: 10px solid black;
 }
 
 #level-btns-container {
@@ -42,7 +40,7 @@ body {
   height: 7vh;
   width: 7vh;
   margin: 0.5vw;
-  background-color: white;
+  background-color: rgb(0, 0, 0, 0);
   border: none;
 }
 
@@ -177,4 +175,38 @@ body {
   font-weight: bold;
   color: white;
   font-family: cursive;
+}
+
+.auth-box {
+  width: fit-content;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(30, 167, 225);
+  border: 7px solid rgb(25, 141, 190);
+}
+
+.login-box-items {
+  margin: 5vh;
+  font-size: 2em;
+  font-weight: bold;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+
+.login-box-input {
+  height: 7vh;
+  width: 25vw;
+  margin-left: 2vw;
+  border: none;
+  border-radius: 15px;
+  font-size: inherit;
+}
+
+.submit-btn {
+  height: 7vh;
+  border-radius: 15px;
+  width: 10vw;
 }

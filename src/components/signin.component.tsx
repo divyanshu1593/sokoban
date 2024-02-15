@@ -41,10 +41,13 @@ export const Signin = () => {
       
   }
   return (
-    <form>
-      username <input ref={usernameRef} type="text" />
-      password <input ref={passwordRef} type="password" />
-      <input type="submit" onClick={clickHandler}/>
-    </form>
+    <div className="auth-box">
+      <div className="login-box-items">SignIn</div>
+      <form>
+        <div className="login-box-items">username <input className="login-box-input"  ref={usernameRef} type="text" /></div>
+        <div className="login-box-items">password <input className="login-box-input" ref={passwordRef} type="password" /></div>
+        <div className="login-box-items"><input className="submit-btn" type="submit" onClick={clickHandler}/></div>
+      </form>
+    </div>
   );
 }
