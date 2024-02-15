@@ -135,6 +135,11 @@ body {
   font-weight: 900;
   padding-top: 20vh;
   padding-bottom: 10vh;
+  background-image: url('./images/Wall_Background.png');
+  background-size: 50px;
+  filter: brightness(70%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 #play-btn {
