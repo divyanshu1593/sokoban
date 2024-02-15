@@ -9,8 +9,8 @@ export const NavbarWelcomeScreen = () => {
   
   return (
     <div id="welcome-navbar">
-      {user && <>Welcome {user.username}</>}
       {user && <button className='welcome-navbar-btn' onClick={() => dispatch(signout())}>sign out</button>}
+      {user && <div id="welcome-user">Welcome {user.username}</div>}
       {!user && <button className='welcome-navbar-btn' onClick={() => navigate('signin')}>signin</button>}
       {!user && <button className='welcome-navbar-btn' onClick={() => navigate('signup')}>signup</button>}
     </div>
