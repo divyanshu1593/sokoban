@@ -1,3 +1,8 @@
+body {
+  padding: 0px;
+  margin: 0px;
+}
+
 #board {
   border: 1px solid black;
   margin: auto;
@@ -93,4 +98,57 @@
     font-size: 3em;
     padding: 2vh;
   }
+}
+
+#welcome-navbar {
+  background-color: rgb(30, 167, 225);
+  height: 10vh;
+  display: flex;
+  padding-left: 70vw;
+}
+
+.welcome-navbar-btn {
+  background-color: rgb(30, 167, 225);
+  border: none;
+  padding: 2vh;
+  height: 100%;
+  font-size: 1.5em;
+  font-weight: bold;
+  color: white;
+  flex: 1 1;
+  cursor: pointer;
+}
+
+.welcome-navbar-btn:hover {
+  background-color: white;
+  color: black;
+}
+
+#main-welcome-screen {
+  height: 90vh;
+  background-image: url('./images/GroundGravel_Grass.png');
+  text-align: center;
+}
+
+#game-title-div {
+  font-size: 7em;
+  font-weight: 900;
+  padding-top: 20vh;
+  padding-bottom: 10vh;
+}
+
+#play-btn {
+  background-color: rgb(30, 167, 225);
+  height: 9vh;
+  width: 15vw;
+  border-radius: 20px;
+  border: 2px solid rgb(25, 141, 190);
+  font-size: 1.5em;
+  font-weight: bold;
+  color: white;
+}
+
+#play-btn:hover {
+  box-shadow: 0px 0px 10px rgb(211, 210, 210);
+  cursor: pointer;
 }

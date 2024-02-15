@@ -19,8 +19,6 @@ export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
       },
     })).json();
 
-    console.log(res);
-
     if (!res.isError) {
       if (res.data) {
         setIsCrossed(true);
