@@ -11,6 +11,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const [levelState, setLevelState] = useState(0);
   const levelStateRef = useRef(levelState);
   const levelStateHistory = useRef([level]);
+  const MAX_HISTORY_LENGTH = 100;
+  const [reRender, setReRender] = useState(false);
   const [hasWon, setHasWon] = useState(false);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
@@ -151,6 +153,13 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     levelStateRef.current += 1;
     const currentStateTillNow = levelStateHistory.current.slice(0, levelStateRef.current);
     currentStateTillNow.push(updatedState);
+
+    if (currentStateTillNow.length > MAX_HISTORY_LENGTH) {
+      currentStateTillNow.shift();
+      levelStateRef.current -= 1;
+      setReRender(prevState => !prevState);
+    }
+
     levelStateHistory.current = currentStateTillNow;
     setLevelState(levelStateRef.current);
     
