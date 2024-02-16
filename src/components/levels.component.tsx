@@ -41,6 +41,7 @@ export const Levels = () =>  {
 
   return (
   <>
+  <div style={{display: 'flex'}}>
     <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
       <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
     </button>
@@ -50,6 +51,8 @@ export const Levels = () =>  {
     }}>
       <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
     </button>
+  </div>
+
     <div className='message'>Level {levelNum}</div>
     {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
   </>

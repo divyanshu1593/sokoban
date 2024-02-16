@@ -215,8 +215,6 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
 
   return (
     <>
-      <UndoBtn undoState={undoState} />
-      <RedoBtn redoState={redoState} />
       <div 
         id='board'
         style={{
@@ -228,6 +226,11 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
       >
         {squares}
       </div>
+      <div id="undo-redo-wraper">
+        <UndoBtn undoState={undoState} />
+        <RedoBtn redoState={redoState} />
+      </div>
+      
       {hasWon && <div className='message'>You have won the game!</div>}
     </>
   );
