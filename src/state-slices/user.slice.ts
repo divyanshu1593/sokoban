@@ -8,7 +8,7 @@ interface UserState {
 }
 
 const initialState: UserState = {
-  value: '',
+  value: sessionStorage.getItem('userJwt') ?? '',
 }
 
 export const userSlice = createSlice({
@@ -16,10 +16,12 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     signin: (state, action: PayloadAction<string>) => {
+      sessionStorage.setItem('userJwt', action.payload);
       state.value = action.payload;
     },
 
     signout: (state) => {
+      sessionStorage.removeItem('userJwt');
       state.value = '';
     }
   }
