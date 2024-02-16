@@ -3,6 +3,7 @@ import { levelType } from "../levels";
 import { Square } from "./square.component";
 import { SquareEnum } from "../enum/square.enum";
 import { useAppSelector } from "../hooks/redux-hooks";
+import { UndoBtn } from "./undo-btn.component";
 
 export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
   const boardDimentions = 70;
@@ -146,9 +147,12 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
 
   const updateMove = (dir: string) => {
     const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
-    levelStateHistory.current.push(updatedState);
-    setLevelState(levelStateRef.current + 1);
     levelStateRef.current += 1;
+    const currentStateTillNow = levelStateHistory.current.slice(0, levelStateRef.current);
+    currentStateTillNow.push(updatedState);
+    levelStateHistory.current = currentStateTillNow;
+    setLevelState(levelStateRef.current);
+    
     
     if (isWin(updatedState)) {
       setHasWon(true);
@@ -185,8 +189,15 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     return true;
   }
 
+  const undoState = () => {
+    if (levelStateRef.current === 0 || wonRef.current) return ;
+    setLevelState(levelStateRef.current - 1);
+    levelStateRef.current -= 1;
+  }
+
   return (
     <>
+      <UndoBtn undoState={undoState} />
       <div 
         id='board'
         style={{
