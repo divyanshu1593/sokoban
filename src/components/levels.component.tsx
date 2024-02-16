@@ -20,7 +20,7 @@ export const Levels = () =>  {
   const levelBtns = [];
   for (let levelKey in levels) {
     const levelNumber = +levelKey.slice(5);
-    levelBtns.push(<LevelBtn 
+    levelBtns.push(<LevelBtn
       key={levelNumber}
       levelNumber={levelNumber}
       lvl={levels[levelKey]}
@@ -41,18 +41,21 @@ export const Levels = () =>  {
 
   return (
   <>
-  <div style={{display: 'flex'}}>
-    <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
-      <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
-    </button>
-    <button className='logo-btn' id='reset-logo-btn' onClick={() => {
-      setReset(true);
-      setTimeout(() => setReset(false));
-    }}>
-      <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
-    </button>
-  </div>
-
+    <div style={{display: 'flex'}}>
+      <abbr title="back">
+        <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
+          <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
+        </button>
+      </abbr>
+      <abbr title="reset">
+        <button className='logo-btn' id='reset-logo-btn' onClick={() => {
+          setReset(true);
+          setTimeout(() => setReset(false));
+        }}>
+          <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
+        </button>
+      </abbr>
+    </div>
     <div className='message'>Level {levelNum}</div>
     {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
   </>
