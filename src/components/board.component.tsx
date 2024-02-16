@@ -6,12 +6,18 @@ import { useAppSelector } from "../hooks/redux-hooks";
 
 export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
   const boardDimentions = 70;
-  const [levelState, setLevelState] = useState(level);
+  const [levelState, setLevelState] = useState(0);
+  const levelStateRef = useRef(levelState);
+  const levelStateHistory = useRef([level]);
   const [hasWon, setHasWon] = useState(false);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
   const jwtToken = useAppSelector(state => state.user.value);
   const squares: JSX.Element[] = [];
+
+  function currentLevelState() {
+    return structuredClone(levelStateHistory.current[levelStateRef.current]);
+  }
 
   function updateBoardSize() {
     const numOfColumns = level[0].length;
@@ -37,9 +43,9 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }
   
-  for (let i = 0; i < levelState.length; i++) {
-    for (let j = 0; j < levelState[0].length; j++) {
-      squares.push(<Square key={`${i}_${j}`} value={levelState[i][j]} />);
+  for (let i = 0; i < currentLevelState().length; i++) {
+    for (let j = 0; j < currentLevelState()[0].length; j++) {
+      squares.push(<Square key={`${i}_${j}`} value={currentLevelState()[i][j]} />);
     }
   }
 
@@ -59,7 +65,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   }
 
   function handleMove(dir: string, state: levelType, playerPos: playerPos): levelType {
-    state = state.slice();
+    state = structuredClone(state);
     let a = 0, b = 0;
     if (dir === 'up'){
       a = -1;
@@ -129,7 +135,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const wonRef = useRef<boolean>();
   wonRef.current = hasWon;
 
-  const keyhandler = function(event: KeyboardEvent) {
+  const keyhandler = (event: KeyboardEvent) => {
     if (event.repeat || wonRef.current) return ;
 
     if (event.key === 'ArrowUp') updateMove('up');
@@ -138,9 +144,11 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     if (event.key === 'ArrowRight') updateMove('right');
   }
 
-  function updateMove(dir: string) {
-    const updatedState = handleMove(dir, levelState, findPlayerPosition(levelState) as playerPos);
-    setLevelState(updatedState);
+  const updateMove = (dir: string) => {
+    const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
+    levelStateHistory.current.push(updatedState);
+    setLevelState(levelStateRef.current + 1);
+    levelStateRef.current += 1;
     
     if (isWin(updatedState)) {
       setHasWon(true);
