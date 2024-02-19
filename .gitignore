@@ -57,6 +57,7 @@ yarn-error.log
 dist
 database
 .env
+web-scraping
 
 # tests
 /test
