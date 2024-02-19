@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { levelType } from "../levels";
 import { Square } from "./square.component";
 import { SquareEnum } from "../enum/square.enum";
@@ -9,8 +9,9 @@ import { RedoBtn } from "./redo-btn.component";
 export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
   const boardDimentions = 70;
   const [levelState, setLevelState] = useState(0);
-  const levelStateRef = useRef(levelState);
+  // const levelStateRef = useRef(levelState);
   const levelStateHistory = useRef([level]);
+  // const [levelStateHistory, setLevelStateHistory] = useState([level]);
   const MAX_HISTORY_LENGTH = 100;
   const [reRender, setReRender] = useState(false);
   const [hasWon, setHasWon] = useState(false);
@@ -19,11 +20,11 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const jwtToken = useAppSelector(state => state.user.value);
   const squares: JSX.Element[] = [];
 
-  function currentLevelState() {
-    return structuredClone(levelStateHistory.current[levelStateRef.current]);
-  }
+  const currentLevelState = useCallback(() => {
+    return structuredClone(levelStateHistory.current[levelState]);
+  }, [levelState]);
 
-  function updateBoardSize() {
+  const updateBoardSize = useCallback(() => {
     const numOfColumns = level[0].length;
     const numOfRows = level.length;
 
@@ -45,7 +46,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     } else {
       resize('vh');
     }
-  }
+  }, [level]);
+
   
   for (let i = 0; i < currentLevelState().length; i++) {
     for (let j = 0; j < currentLevelState()[0].length; j++) {
@@ -68,7 +70,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }
 
-  function handleMove(dir: string, state: levelType, playerPos: playerPos): levelType {
+  const handleMove = useCallback((dir: string, state: levelType, playerPos: playerPos): levelType => {
     state = structuredClone(state);
     let a = 0, b = 0;
     if (dir === 'up'){
@@ -134,34 +136,27 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
       return state;
     }
     return state;
-  }
+  }, []);
 
   const wonRef = useRef<boolean>();
   wonRef.current = hasWon;
 
-  const keyhandler = (event: KeyboardEvent) => {
-    if (event.repeat || wonRef.current) return ;
-
-    if (event.key === 'ArrowUp') updateMove('up');
-    if (event.key === 'ArrowDown') updateMove('down');
-    if (event.key === 'ArrowLeft') updateMove('left');
-    if (event.key === 'ArrowRight') updateMove('right');
-  }
-
-  const updateMove = (dir: string) => {
+  const updateMove = useCallback((dir: string) => {
     const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
-    levelStateRef.current += 1;
-    const currentStateTillNow = levelStateHistory.current.slice(0, levelStateRef.current);
+    // levelStateRef.current += 1;
+    const currentStateTillNow = levelStateHistory.current.slice(0, levelState + 1);
     currentStateTillNow.push(updatedState);
 
     if (currentStateTillNow.length > MAX_HISTORY_LENGTH) {
       currentStateTillNow.shift();
-      levelStateRef.current -= 1;
+      // levelStateRef.current -= 1;
       setReRender(prevState => !prevState);
+    } else {
+      setLevelState(levelState + 1);
     }
 
     levelStateHistory.current = currentStateTillNow;
-    setLevelState(levelStateRef.current);
+    // setLevelState(levelStateRef.current);
     
     
     if (isWin(updatedState)) {
@@ -177,7 +172,16 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
         }),
       });
     }
-  }
+  }, [currentLevelState, handleMove, jwtToken, levelNumber, levelState]);
+
+  const keyhandler = useCallback((event: KeyboardEvent) => {
+    if (event.repeat || wonRef.current) return ;
+
+    if (event.key === 'ArrowUp') updateMove('up');
+    if (event.key === 'ArrowDown') updateMove('down');
+    if (event.key === 'ArrowLeft') updateMove('left');
+    if (event.key === 'ArrowRight') updateMove('right');
+  }, [updateMove]);
 
   useEffect(() => {
     window.addEventListener('keydown', keyhandler);
@@ -187,7 +191,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
       window.removeEventListener('keydown', keyhandler);
       window.removeEventListener('resize', updateBoardSize);
     }
-  }, []);
+  }, [keyhandler, updateBoardSize]);
 
   function isWin(state: levelType): boolean {
     for (let row of state){
@@ -200,17 +204,17 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   }
 
   const undoState = () => {
-    if (levelStateRef.current === 0 || wonRef.current) return ;
-    levelStateRef.current -= 1;
-    setLevelState(levelStateRef.current);
+    if (levelState === 0 || wonRef.current) return ;
+    // levelStateRef.current -= 1;
+    setLevelState(levelState - 1);
   }
 
   const redoState = () => {
-    if (levelStateRef.current === levelStateHistory.current.length - 1) {
+    if (levelState === levelStateHistory.current.length - 1) {
       return ;
     }
-    levelStateRef.current += 1;
-    setLevelState(levelStateRef.current);
+    // levelStateRef.current += 1;
+    setLevelState(levelState + 1);
   }
 
   return (
