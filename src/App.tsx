@@ -1,10 +1,10 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { WelcomeScreen } from './components/welcome-screen.component';
-import { Signin } from './components/signin.component';
-import { Signup } from './components/signup.component';
-import { Levels } from './components/levels.component';
+import { WelcomeScreen } from './components/welcome-screen/welcome-screen.component';
+import { Signin } from './components/welcome-screen/signin.component';
+import { Signup } from './components/welcome-screen/signup.component';
+import { Levels } from './components/levels-screen/levels.component';
 import { selectPayload } from './state-slices/user.slice';
 import { useAppSelector } from './hooks/redux-hooks';
 

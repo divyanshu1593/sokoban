@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
-import { levelType } from "../levels";
+import { levelType } from "../../levels";
 import { Square } from "./square.component";
-import { SquareEnum } from "../enum/square.enum";
-import { useAppSelector } from "../hooks/redux-hooks";
+import { SquareEnum } from "../../enum/square.enum";
+import { useAppSelector } from "../../hooks/redux-hooks";
 import { UndoBtn } from "./undo-btn.component";
 import { RedoBtn } from "./redo-btn.component";
 

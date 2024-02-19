@@ -1,10 +1,10 @@
-import { SquareEnum } from "../enum/square.enum";
-import GroundGravel_Grass from '../images/GroundGravel_Grass.png';
-import WallRound_Brown from '../images/WallRound_Brown.png';
-import CrateDark_Brown from '../images/CrateDark_Brown.png';
-import CrateDark_Blue from '../images/CrateDark_Blue.png';
-import EndPoint_Blue from '../images/EndPoint_Blue.png';
-import Character from '../images/Character.png';
+import { SquareEnum } from "../../enum/square.enum";
+import GroundGravel_Grass from '../../images/GroundGravel_Grass.png';
+import WallRound_Brown from '../../images/WallRound_Brown.png';
+import CrateDark_Brown from '../../images/CrateDark_Brown.png';
+import CrateDark_Blue from '../../images/CrateDark_Blue.png';
+import EndPoint_Blue from '../../images/EndPoint_Blue.png';
+import Character from '../../images/Character.png';
 
 export const Square = ({ value }: { value: SquareEnum }) => {
   if (value === SquareEnum.EMPTY_SPACE) {

@@ -1,4 +1,4 @@
-import UndoLogo from '../images/undo.svg';
+import UndoLogo from '../../images/undo.svg';
 
 export const UndoBtn = ({undoState}: {undoState: () => void}) => {
   return (

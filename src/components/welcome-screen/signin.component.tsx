@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { signin } from "../state-slices/user.slice";
-import { useAppDispatch } from "../hooks/redux-hooks";
+import { signin } from "../../state-slices/user.slice";
+import { useAppDispatch } from "../../hooks/redux-hooks";
 
 export const Signin = () => {
   const usernameRef = useRef<HTMLInputElement>(null);

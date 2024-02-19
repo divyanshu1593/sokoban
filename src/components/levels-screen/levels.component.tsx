@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { levelType, levels } from "../levels";
+import { levelType, levels } from "../../levels";
 import { LevelBtn } from "./level-btn.component";
-import { Board } from "./board.component";
-import BackLogo from '../images/back.svg';
-import ResetLogo from '../images/reset.svg';
+import { Board } from "../board-screen/board.component";
+import BackLogo from '../../images/back.svg';
+import ResetLogo from '../../images/reset.svg';
 
 export const Levels = () =>  {
   const [level, setLevel] = useState(levels.level1);

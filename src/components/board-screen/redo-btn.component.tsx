@@ -1,4 +1,4 @@
-import RedoLogo from '../images/redo.svg';
+import RedoLogo from '../../images/redo.svg';
 
 export const RedoBtn = ({redoState}: {redoState: () => void}) => {
   return (
