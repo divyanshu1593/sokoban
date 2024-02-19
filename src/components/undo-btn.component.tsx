@@ -7,6 +7,5 @@ export const UndoBtn = ({undoState}: {undoState: () => void}) => {
         <img src={UndoLogo} alt='undo' height='100%' width='100%'/>
       </button>
     </abbr>
-    
   );
 }

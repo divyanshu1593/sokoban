@@ -9,7 +9,7 @@ export const Signin = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  async function clickHandler(event: React.MouseEvent<HTMLInputElement, MouseEvent>) {
+  const clickHandler = async (event: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
     event.preventDefault();
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;

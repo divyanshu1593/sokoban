@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAppSelector } from "../hooks/redux-hooks";
 import { levelType } from "../levels";
 import WinCrate from '../images/CrateDark_Blue.png';
@@ -11,7 +11,7 @@ export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
   const [isCrossed, setIsCrossed] = useState(false);
   const jwtToken = useAppSelector(state => state.user.value);
 
-  const updateIfCrossed = async () => {
+  const updateIfCrossed = useCallback(async () => {
     const res = await (await fetch(`http://localhost:3000/is-level-crossed/${levelNumber}`, {
       method: 'GET',
       headers: {
@@ -25,11 +25,11 @@ export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
         setIsCrossed(true);
       }
     }
-  }
+  }, [jwtToken, levelNumber]);
 
   useEffect(() => {
     updateIfCrossed();
-  }, []);
+  }, [updateIfCrossed]);
 
   if (isCrossed) {
     return (

@@ -11,7 +11,7 @@ export const Levels = () =>  {
   const [showBoard, setShowBoard] = useState(false);
   const [reset, setReset] = useState(false);
 
-  function clickHandler(lvl: levelType, lvlNum: number) {
+  const clickHandler = (lvl: levelType, lvlNum: number) => {
     setLevel(lvl);
     setLevelNum(lvlNum);
     setShowBoard(true);
