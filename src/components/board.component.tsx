@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { levelType } from "../levels";
 import { Square } from "./square.component";
 import { SquareEnum } from "../enum/square.enum";
@@ -6,14 +6,12 @@ import { useAppSelector } from "../hooks/redux-hooks";
 import { UndoBtn } from "./undo-btn.component";
 import { RedoBtn } from "./redo-btn.component";
 
+const BOARD_DIMENTIONS = 70;
+const MAX_HISTORY_LENGTH = 100;
+
 export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
-  const boardDimentions = 70;
   const [levelState, setLevelState] = useState(0);
-  // const levelStateRef = useRef(levelState);
-  const levelStateHistory = useRef([level]);
-  // const [levelStateHistory, setLevelStateHistory] = useState([level]);
-  const MAX_HISTORY_LENGTH = 100;
-  const [reRender, setReRender] = useState(false);
+  const [levelStateHistory, setLevelStateHistory] = useState([level]);
   const [hasWon, setHasWon] = useState(false);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
@@ -21,8 +19,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const squares: JSX.Element[] = [];
 
   const currentLevelState = useCallback(() => {
-    return structuredClone(levelStateHistory.current[levelState]);
-  }, [levelState]);
+    return structuredClone(levelStateHistory[levelState]);
+  }, [levelState, levelStateHistory]);
 
   const updateBoardSize = useCallback(() => {
     const numOfColumns = level[0].length;
@@ -30,14 +28,14 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
 
     function resize(unit: 'vh' | 'vw') {
       if (numOfColumns < numOfRows) {
-        setBoardWidth((boardDimentions * numOfColumns) / numOfRows + unit);
+        setBoardWidth((BOARD_DIMENTIONS * numOfColumns) / numOfRows + unit);
       } else {
-        setBoardWidth(boardDimentions + unit);
+        setBoardWidth(BOARD_DIMENTIONS + unit);
       }
       if (numOfColumns > numOfRows) {
-        setBoardHeight((boardDimentions * numOfRows) / numOfColumns + unit);
+        setBoardHeight((BOARD_DIMENTIONS * numOfRows) / numOfColumns + unit);
       } else {
-        setBoardHeight(boardDimentions + unit);
+        setBoardHeight(BOARD_DIMENTIONS + unit);
       }
     }
 
@@ -60,7 +58,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     j: number;
   }
 
-  function findPlayerPosition(state: levelType) {
+  const findPlayerPosition = (state: levelType) => {
     for (let i = 0; i < state.length; i++){
       for (let j = 0; j < state[0].length; j++){
         if (state[i][j] === SquareEnum.PLAYER_AT_EMPTY_SPACE || state[i][j] === SquareEnum.PLAYER_AT_VALID_SPACE) {
@@ -138,26 +136,18 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     return state;
   }, []);
 
-  const wonRef = useRef<boolean>();
-  wonRef.current = hasWon;
-
   const updateMove = useCallback((dir: string) => {
     const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
-    // levelStateRef.current += 1;
-    const currentStateTillNow = levelStateHistory.current.slice(0, levelState + 1);
+    const currentStateTillNow = levelStateHistory.slice(0, levelState + 1);
     currentStateTillNow.push(updatedState);
 
     if (currentStateTillNow.length > MAX_HISTORY_LENGTH) {
       currentStateTillNow.shift();
-      // levelStateRef.current -= 1;
-      setReRender(prevState => !prevState);
     } else {
       setLevelState(levelState + 1);
     }
 
-    levelStateHistory.current = currentStateTillNow;
-    // setLevelState(levelStateRef.current);
-    
+    setLevelStateHistory(currentStateTillNow);
     
     if (isWin(updatedState)) {
       setHasWon(true);
@@ -172,16 +162,16 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
         }),
       });
     }
-  }, [currentLevelState, handleMove, jwtToken, levelNumber, levelState]);
+  }, [currentLevelState, handleMove, jwtToken, levelNumber, levelState, levelStateHistory]);
 
   const keyhandler = useCallback((event: KeyboardEvent) => {
-    if (event.repeat || wonRef.current) return ;
+    if (event.repeat || hasWon) return ;
 
     if (event.key === 'ArrowUp') updateMove('up');
     if (event.key === 'ArrowDown') updateMove('down');
     if (event.key === 'ArrowLeft') updateMove('left');
     if (event.key === 'ArrowRight') updateMove('right');
-  }, [updateMove]);
+  }, [hasWon, updateMove]);
 
   useEffect(() => {
     window.addEventListener('keydown', keyhandler);
@@ -193,7 +183,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }, [keyhandler, updateBoardSize]);
 
-  function isWin(state: levelType): boolean {
+  const isWin = (state: levelType): boolean => {
     for (let row of state){
       for (let j of row){
         if (j === SquareEnum.VALID_SPACE || j === SquareEnum.PLAYER_AT_VALID_SPACE) return false;
@@ -204,16 +194,14 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   }
 
   const undoState = () => {
-    if (levelState === 0 || wonRef.current) return ;
-    // levelStateRef.current -= 1;
+    if (levelState === 0 || hasWon) return ;
     setLevelState(levelState - 1);
   }
 
   const redoState = () => {
-    if (levelState === levelStateHistory.current.length - 1) {
+    if (levelState === levelStateHistory.length - 1) {
       return ;
     }
-    // levelStateRef.current += 1;
     setLevelState(levelState + 1);
   }
 
