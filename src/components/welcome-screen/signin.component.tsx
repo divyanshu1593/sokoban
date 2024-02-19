@@ -14,13 +14,13 @@ export const Signin = () => {
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;
 
-    if (username.length <= 3 || username.length >= 20) {
+    if (username.length < 3 || username.length > 20) {
       alert('username must be between 3 to 20 characters');
       return ;
     }
 
-    if (password.length <= 8 || password.length >= 20) {
-      alert('password must be between 3 to 20 characters');
+    if (password.length < 8 || password.length > 20) {
+      alert('password must be between 8 to 20 characters');
       return ;
     }
 
