@@ -41,8 +41,8 @@ body {
 }
 
 .logo-btn {
-  height: 7vh;
-  width: 7vh;
+  height: 100%;
+  width: 100%;
   margin: 0.5vw;
   background-color: rgb(0, 0, 0, 0);
   border: none;
@@ -60,30 +60,6 @@ body {
   display: flex;
   justify-content: center;
   gap: 12vw;
-}
-
-@media (max-width: 550px) or (max-height: 550px) {
-  .logo-btn {
-    height: 15vw;
-    width: 15vw;
-    margin: 0.5vw;
-  }
-}
-
-@media (orientation: portrait) and ((max-width: 550px) or (max-height: 550px)) {
-  .logo-btn {
-    height: 15vw;
-    width: 15vw;
-    margin: 0.5vw;
-  }
-}
-
-@media (orientation: portrait) and ((min-width: 551px) and (min-height: 551px)) {
-  .logo-btn {
-    height: 7vw;
-    width: 7vw;
-    margin: 0.5vw;
-  }
 }
 
 @media (max-width: 190px) {
@@ -223,4 +199,16 @@ body {
   height: 7vh;
   border-radius: 15px;
   width: 10vw;
+}
+
+.top-btns-wrapper {
+  display: flex;
+  height: 10vh;
+}
+
+@media (max-width: 400px) {
+  .top-btns-wrapper {
+    display: flex;
+    height: 5vh;
+  }
 }

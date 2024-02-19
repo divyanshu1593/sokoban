@@ -41,7 +41,7 @@ export const Levels = () =>  {
 
   return (
   <>
-    <div style={{display: 'flex'}}>
+    <div  className="top-btns-wrapper">
       <abbr title="back">
         <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
           <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
