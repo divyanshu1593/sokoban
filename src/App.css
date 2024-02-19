@@ -60,6 +60,13 @@ body {
   display: flex;
   justify-content: center;
   gap: 12vw;
+  height: 10vh;
+}
+
+@media (max-width: 400px) {
+  #undo-redo-wraper {
+    height: 5vh;
+  }
 }
 
 @media (max-width: 190px) {
@@ -201,14 +208,13 @@ body {
   width: 10vw;
 }
 
-.top-btns-wrapper {
+.btns-wrapper {
   display: flex;
   height: 10vh;
 }
 
 @media (max-width: 400px) {
-  .top-btns-wrapper {
-    display: flex;
+  .btns-wrapper {
     height: 5vh;
   }
 }
