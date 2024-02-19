@@ -6,7 +6,7 @@ import { useAppSelector } from "../../hooks/redux-hooks";
 import { UndoBtn } from "./undo-btn.component";
 import { RedoBtn } from "./redo-btn.component";
 
-const BOARD_DIMENTIONS = 70;
+const BOARD_DIMENTIONS = 60;
 const MAX_HISTORY_LENGTH = 100;
 
 export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
@@ -204,8 +204,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
     setLevelState(levelState + 1);
   }
-
   return (
+
     <>
       <div 
         id='board'
