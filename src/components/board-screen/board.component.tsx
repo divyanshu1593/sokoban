@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { levelType } from "../../levels";
 import { Square } from "./square.component";
 import { SquareEnum } from "../../enum/square.enum";
@@ -173,15 +173,48 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     if (event.key === 'ArrowRight') updateMove('right');
   }, [hasWon, updateMove]);
 
+  const x = useRef<number | null>(null);
+  const y = useRef<number | null>(null);
+
+  const mouseHandler = useCallback((event: TouchEvent) => {
+    if (event.type === 'touchstart') {
+      x.current = event.changedTouches[0].screenX;
+      y.current = event.changedTouches[0].screenY;
+    } else if (event.type === 'touchend') {
+      if (!x || !y) return ;
+
+      const xDiff = event.changedTouches[0].screenX - x.current!;
+      const yDiff = event.changedTouches[0].screenY - y.current!;
+
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {
+        if (xDiff < 0) {
+          updateMove('left');
+        } else if (xDiff > 0) {
+          updateMove('right');
+        }
+      } else if (Math.abs(xDiff) < Math.abs(yDiff)) {
+        if (yDiff < 0) {
+          updateMove('up');
+        } else if (yDiff > 0) {
+          updateMove('down');
+        }
+      }
+    }
+  }, [updateMove]);
+
   useEffect(() => {
     window.addEventListener('keydown', keyhandler);
     window.addEventListener('resize', updateBoardSize);
+    window.addEventListener('touchstart', mouseHandler);
+    window.addEventListener('touchend', mouseHandler);
     updateBoardSize();
     return () => {
       window.removeEventListener('keydown', keyhandler);
       window.removeEventListener('resize', updateBoardSize);
+      window.removeEventListener('touchstart', mouseHandler);
+      window.removeEventListener('touchend', mouseHandler);
     }
-  }, [keyhandler, updateBoardSize]);
+  }, [keyhandler, mouseHandler, updateBoardSize]);
 
   const isWin = (state: levelType): boolean => {
     for (let row of state){
