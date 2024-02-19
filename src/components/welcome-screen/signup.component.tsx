@@ -11,6 +11,16 @@ export const Signup = () => {
     const username = usernameRef.current!.value;
     const password = passwordRef.current!.value;
 
+    if (username.length <= 3 || username.length >= 20) {
+      alert('username must be between 3 to 20 characters');
+      return ;
+    }
+
+    if (password.length <= 8 || password.length >= 20) {
+      alert('password must be between 3 to 20 characters');
+      return ;
+    }
+
     const res = await (await fetch('http://localhost:3000/auth/signup', {
       method: 'POST',
       headers: {
