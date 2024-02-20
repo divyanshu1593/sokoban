@@ -25,7 +25,7 @@ export const Signin = () => {
     }
 
     try {
-      const res = await (await fetch('http://localhost:3000/auth/signin', {
+      const res = await (await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/signin`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

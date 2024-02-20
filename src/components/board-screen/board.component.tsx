@@ -151,7 +151,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     
     if (isWin(updatedState)) {
       setHasWon(true);
-      fetch('http://localhost:3000/add-crossed-level', {
+      fetch(`${process.env.REACT_APP_BACKEND_URL}/add-crossed-level`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json",

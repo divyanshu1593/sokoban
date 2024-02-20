@@ -21,7 +21,7 @@ export const Signup = () => {
       return ;
     }
 
-    const res = await (await fetch('http://localhost:3000/auth/signup', {
+    const res = await (await fetch(`${process.env.REACT_APP_BACKEND_URL}/auth/signup`, {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",

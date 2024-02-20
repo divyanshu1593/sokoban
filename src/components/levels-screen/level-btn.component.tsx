@@ -12,7 +12,7 @@ export const LevelBtn = ({ levelNumber, lvl, clickHandler }: {
   const jwtToken = useAppSelector(state => state.user.value);
 
   const updateIfCrossed = useCallback(async () => {
-    const res = await (await fetch(`http://localhost:3000/is-level-crossed/${levelNumber}`, {
+    const res = await (await fetch(`${process.env.REACT_APP_BACKEND_URL}/is-level-crossed/${levelNumber}`, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
