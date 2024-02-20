@@ -253,4 +253,18 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  width: 100%;
+}
+
+#move-cnt {
+  font-size: 2em;
+  display: flex;
+  flex-direction: row-reverse;
+  padding: 0 5vw;
+}
+
+@media (max-width: 400px) {
+  #move-cnt {
+    font-size: 1em;
+  }
 }

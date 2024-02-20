@@ -13,6 +13,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const [levelState, setLevelState] = useState(0);
   const [levelStateHistory, setLevelStateHistory] = useState([level]);
   const [hasWon, setHasWon] = useState(false);
+  const [moveCnt, setMoveCnt] = useState(0);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
   const jwtToken = useAppSelector(state => state.user.value);
@@ -148,6 +149,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
 
     setLevelStateHistory(currentStateTillNow);
+    setMoveCnt(moveCnt + 1);
     
     if (isWin(updatedState)) {
       setHasWon(true);
@@ -162,7 +164,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
         }),
       });
     }
-  }, [currentLevelState, handleMove, jwtToken, levelNumber, levelState, levelStateHistory]);
+  }, [currentLevelState, handleMove, jwtToken, levelNumber, levelState, levelStateHistory, moveCnt]);
 
   const keyhandler = useCallback((event: KeyboardEvent) => {
     if (event.repeat || hasWon) return ;
@@ -229,6 +231,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const undoState = () => {
     if (levelState === 0 || hasWon) return ;
     setLevelState(levelState - 1);
+    setMoveCnt(moveCnt - 1);
   }
 
   const redoState = () => {
@@ -236,10 +239,14 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
       return ;
     }
     setLevelState(levelState + 1);
+    setMoveCnt(moveCnt + 1);
   }
   return (
 
     <>
+      <div id="move-cnt">
+        Moves: {moveCnt}
+      </div>
       <div 
         id='board'
         style={{
