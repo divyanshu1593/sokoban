@@ -27,12 +27,6 @@ export const userSlice = createSlice({
   }
 });
 
-export const selectPayload = (state: RootState) => {
-  const userJwtToken = state.user.value;
-  if (!userJwtToken) return ;
-  return jwtDecode<UserJwtPayload>(userJwtToken);
-}
-
 export const makeSelectPayload = () => {
   const selectPayload = createSelector((state: RootState) => state.user.value, (userJwtToken: string) => {
     if (!userJwtToken) return ;
