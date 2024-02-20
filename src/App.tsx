@@ -5,11 +5,11 @@ import { WelcomeScreen } from './components/welcome-screen/welcome-screen.compon
 import { Signin } from './components/welcome-screen/signin.component';
 import { Signup } from './components/welcome-screen/signup.component';
 import { Levels } from './components/levels-screen/levels.component';
-import { selectPayload } from './state-slices/user.slice';
+import { makeSelectPayload } from './state-slices/user.slice';
 import { useAppSelector } from './hooks/redux-hooks';
 
 function App() {
-  const user = useAppSelector(selectPayload);
+  const user = useAppSelector(makeSelectPayload());
   
   return (
     <BrowserRouter>
