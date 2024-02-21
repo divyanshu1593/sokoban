@@ -249,11 +249,14 @@ body {
 }
 
 #play-area {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   width: 100%;
+}
+
+#play-area-container {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #move-cnt {
@@ -267,4 +270,10 @@ body {
   #move-cnt {
     font-size: 1em;
   }
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }

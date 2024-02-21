@@ -56,9 +56,11 @@ export const Levels = () =>  {
         </button>
       </abbr>
     </div>
-    <div id="play-area">
-      <div className='message'>Level {levelNum}</div>
-      {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
+    <div id="play-area-container">
+      <div id="play-area">
+        <div className='message'>Level {levelNum}</div>
+        {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
+      </div>
     </div>
   </>
   );
