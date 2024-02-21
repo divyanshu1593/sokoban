@@ -4,6 +4,7 @@ import { LevelBtn } from "./level-btn.component";
 import { Board } from "../board-screen/board.component";
 import BackLogo from '../../images/back.svg';
 import ResetLogo from '../../images/reset.svg';
+import LeaderboardLogo from '../../images/leaderboard.svg';
 import { useNavigate } from "react-router-dom";
 
 export const Levels = () =>  {
@@ -58,10 +59,10 @@ export const Levels = () =>  {
         </button>
       </abbr>
       <abbr title="leaderboard">
-        <button onClick={() => {
+        <button className='logo-btn' onClick={() => {
           navigate(`/leaderboard/${levelNum}`);
         }}>
-          leaderboard
+          <img src={LeaderboardLogo} alt="leaderboard" height='100%' width='100%'/>
         </button>
       </abbr>
     </div>

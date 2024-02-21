@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { Ranking } from "../../interface/ranking.interface";
+import { RankingTable } from "./ranking-table.component";
+import LoadingGif from '../../images/loading.svg';
 
 export const Leaderboard = () => {
   const location = useLocation();
@@ -25,12 +27,22 @@ export const Leaderboard = () => {
   if (ranking) {
     return (
     <>
-      {JSON.stringify(ranking)}
+      <div className="message">Leaderboard</div>
+      <RankingTable ranking={ranking}/>
     </>
     );
   }
 
   return (
-    <>Loading...</>
+    <>
+      <div className="message">Leaderboard</div>
+      <div style={{
+        margin: 'auto',
+      }}>
+        <img src={LoadingGif} alt="Loading" style={{
+          backgroundColor: 'rgb(0, 0, 0, 0)',
+        }} />
+      </div>
+    </>
   );
 }
