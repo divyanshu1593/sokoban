@@ -160,7 +160,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
           Authorization: `Bearer ${jwtToken}`,
         },
         body: JSON.stringify({
-          levelCrossed: levelNumber,
+          level: levelNumber,
+          minNumOfMoves: moveCnt + 1,
         }),
       });
     }
