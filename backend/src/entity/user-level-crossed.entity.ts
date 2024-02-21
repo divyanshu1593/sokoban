@@ -10,4 +10,7 @@ export class UserLevelCrossed {
 
   @Column()
   levelCrossed: number;
+
+  @Column()
+  minNumOfMoves: number;
 }

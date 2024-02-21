@@ -12,6 +12,7 @@ import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { UserLevelCrossedRepository } from './repository/user-level-crossed.repository';
 import { CustomResponse } from './types/response.type';
 import { UserLevelCrossed } from './entity/user-level-crossed.entity';
+import { LevelInfoDto } from './dto/level-info.dto';
 
 @Controller()
 export class AppController {
@@ -38,15 +39,15 @@ export class AppController {
   @Get('is-level-crossed/:level')
   async isLevelCrossed(
     @Request() request,
-    @Param('level') level,
+    @Param() levelObj: Omit<LevelInfoDto, 'minNumOfMoves'>,
   ): Promise<CustomResponse<boolean>> {
     return {
       isError: false,
       message: '',
-      data: await this.userLevelCrossedRepo.isLevelCrossed({
-        username: request.user.username,
-        level,
-      }),
+      data: await this.userLevelCrossedRepo.isLevelCrossed(
+        request.user.username,
+        levelObj.level,
+      ),
     };
   }
 
@@ -54,12 +55,12 @@ export class AppController {
   @Post('add-crossed-level')
   async addCrossedLevel(
     @Request() request,
-    @Body('levelCrossed') levelCrossed: number,
+    @Body() levelInfo: LevelInfoDto,
   ): Promise<CustomResponse<null>> {
-    await this.userLevelCrossedRepo.addCrossedLevel({
-      username: request.user.username,
-      level: levelCrossed,
-    });
+    await this.userLevelCrossedRepo.addCrossedLevel(
+      request.user.username,
+      levelInfo,
+    );
 
     return {
       isError: false,

@@ -13,30 +13,34 @@ export class UserLevelCrossedRepository extends Repository<UserLevelCrossed> {
     super(UserLevelCrossed, dataSource.createEntityManager());
   }
 
-  async addCrossedLevel(crossedLevelInfo: LevelInfoDto) {
-    const { username, level } = crossedLevelInfo;
+  async addCrossedLevel(username: string, crossedLevelInfo: LevelInfoDto) {
+    const { level, minNumOfMoves } = crossedLevelInfo;
 
     if (!(await this.userRepository.findOneBy({ username }))) {
       throw new UnauthorizedException();
     }
 
-    if (await this.findOneBy({ username, levelCrossed: level })) {
+    const levelResult = await this.findOneBy({ username, levelCrossed: level });
+
+    if (levelResult === null) {
+      await this.insert({
+        username,
+        levelCrossed: level,
+        minNumOfMoves,
+      });
+
       return;
     }
 
-    await this.insert({
-      username,
-      levelCrossed: level,
-    });
+    if (minNumOfMoves < levelResult.minNumOfMoves) {
+      await this.update(levelResult.id, { minNumOfMoves });
+    }
   }
 
-  async isLevelCrossed(levelInfo: LevelInfoDto) {
-    const { username, level } = levelInfo;
-
+  async isLevelCrossed(username: string, level: number) {
     if (await this.findOneBy({ username, levelCrossed: level })) {
       return true;
     }
-
     return false;
   }
 
