@@ -13,6 +13,7 @@ import { UserLevelCrossedRepository } from './repository/user-level-crossed.repo
 import { CustomResponse } from './types/response.type';
 import { UserLevelCrossed } from './entity/user-level-crossed.entity';
 import { LevelInfoDto } from './dto/level-info.dto';
+import { CrossedLevelInfo } from './types/crossed-level-info.interface';
 
 @Controller()
 export class AppController {
@@ -36,11 +37,11 @@ export class AppController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('is-level-crossed/:level')
+  @Get('level-crossed-info/:level')
   async isLevelCrossed(
     @Request() request,
     @Param() levelObj: Omit<LevelInfoDto, 'minNumOfMoves'>,
-  ): Promise<CustomResponse<boolean>> {
+  ): Promise<CustomResponse<CrossedLevelInfo>> {
     return {
       isError: false,
       message: '',
