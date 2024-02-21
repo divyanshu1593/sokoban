@@ -69,7 +69,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }
 
-  const handleMove = useCallback((dir: string, state: levelType, playerPos: playerPos): levelType => {
+  const handleMove = useCallback((dir: string, state: levelType, playerPos: playerPos): levelType | null => {
     state = structuredClone(state);
     let a = 0, b = 0;
     if (dir === 'up'){
@@ -105,7 +105,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
     
     if (nextInDir === SquareEnum.WALL){
-      return state;
+      return null;
     }
     
     if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE || nextInDir === SquareEnum.BOX_AT_VALID_SPACE){
@@ -131,14 +131,15 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
 
         return state;
       }
-
-      return state;
+      return null;
     }
-    return state;
+    return null;
   }, []);
 
   const updateMove = useCallback((dir: string) => {
     const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
+    if (updatedState === null) return ;
+
     const currentStateTillNow = levelStateHistory.slice(0, levelState + 1);
     currentStateTillNow.push(updatedState);
 
