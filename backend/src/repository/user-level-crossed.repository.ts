@@ -14,6 +14,15 @@ export class UserLevelCrossedRepository extends Repository<UserLevelCrossed> {
     super(UserLevelCrossed, dataSource.createEntityManager());
   }
 
+  async getRanking(level: number) {
+    return await this.createQueryBuilder('userLevelCrossed')
+      .select('userLevelCrossed.username')
+      .addSelect('userLevelCrossed.minNumOfMoves')
+      .where({ levelCrossed: level })
+      .orderBy('userLevelCrossed.minNumOfMoves')
+      .getMany();
+  }
+
   async addCrossedLevel(username: string, crossedLevelInfo: LevelInfoDto) {
     const { level, minNumOfMoves } = crossedLevelInfo;
 

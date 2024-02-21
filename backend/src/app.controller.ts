@@ -22,6 +22,17 @@ export class AppController {
     private userLevelCrossedRepo: UserLevelCrossedRepository,
   ) {}
 
+  @Get('get-ranking/:level')
+  async getRanking(
+    @Param() levelObj: Omit<LevelInfoDto, 'minNumOfMoves'>,
+  ): Promise<CustomResponse<UserLevelCrossed[]>> {
+    return {
+      isError: false,
+      message: '',
+      data: await this.userLevelCrossedRepo.getRanking(levelObj.level),
+    };
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get('get-crossed-levels')
   async getLevelCrossed(
