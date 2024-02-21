@@ -4,12 +4,14 @@ import { LevelBtn } from "./level-btn.component";
 import { Board } from "../board-screen/board.component";
 import BackLogo from '../../images/back.svg';
 import ResetLogo from '../../images/reset.svg';
+import { useNavigate } from "react-router-dom";
 
 export const Levels = () =>  {
   const [level, setLevel] = useState(levels.level1);
   const [levelNum, setLevelNum] = useState(1);
   const [showBoard, setShowBoard] = useState(false);
   const [reset, setReset] = useState(false);
+  const navigate = useNavigate();
 
   const clickHandler = (lvl: levelType, lvlNum: number) => {
     setLevel(lvl);
@@ -53,6 +55,13 @@ export const Levels = () =>  {
           setTimeout(() => setReset(false));
         }}>
           <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
+        </button>
+      </abbr>
+      <abbr title="leaderboard">
+        <button onClick={() => {
+          navigate(`/leaderboard/${levelNum}`);
+        }}>
+          leaderboard
         </button>
       </abbr>
     </div>
