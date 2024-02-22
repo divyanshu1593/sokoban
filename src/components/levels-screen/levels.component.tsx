@@ -45,31 +45,31 @@ export const Levels = () =>  {
   return (
   <>
     <div  className="btns-wrapper">
-      <abbr title="back">
         <button className='logo-btn' id='back-logo-btn' onClick={() => setShowBoard(false)}>
+      <abbr title="back">
           <img src={BackLogo} alt='back logo' height='100%' width='100%'></img>
-        </button>
       </abbr>
-      <abbr title="reset">
+        </button>
         <button className='logo-btn' id='reset-logo-btn' onClick={() => {
           setReset(true);
           setTimeout(() => setReset(false));
         }}>
+        <abbr title="reset">
           <img src={ResetLogo} alt='reset logo' height='100%' width='100%' />
-        </button>
       </abbr>
-      <abbr title="leaderboard">
+        </button>
         <button className='logo-btn' onClick={() => {
           navigate(`/leaderboard/${levelNum}`);
         }}>
+      <abbr title="leaderboard">
           <img src={LeaderboardLogo} alt="leaderboard" height='100%' width='100%'/>
-        </button>
       </abbr>
+        </button>
     </div>
     <div id="play-area-container">
       <div id="play-area">
         <div className='message'>Level {levelNum}</div>
-        {!reset && <Board level={structuredClone(level)} levelNumber={levelNum}/>}
+        {!reset && <Board level={structuredClone(level)} levelNumber={levelNum} />}
       </div>
     </div>
   </>

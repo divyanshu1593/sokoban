@@ -9,7 +9,8 @@ import { RedoBtn } from "./redo-btn.component";
 const BOARD_DIMENTIONS = 60;
 const MAX_HISTORY_LENGTH = 100;
 
-export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number}) => {
+export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: number }) => {
+  const [currentBest, setCurrentBest] = useState<number | null>(null);
   const [levelState, setLevelState] = useState(0);
   const [levelStateHistory, setLevelStateHistory] = useState([level]);
   const [hasWon, setHasWon] = useState(false);
@@ -18,6 +19,24 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const [boardWidth, setBoardWidth] = useState('');
   const jwtToken = useAppSelector(state => state.user.value);
   const squares: JSX.Element[] = [];
+
+  const updateCurrentBest = useCallback(async () => {
+    const res = await (await fetch(`${process.env.REACT_APP_BACKEND_URL}/level-crossed-info/${levelNumber}`, {
+      method: 'GET',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${jwtToken}`,
+      },
+    })).json();
+
+    if (!res.isError && res.data.isCrossed) {
+      setCurrentBest(res.data.minNumOfMoves);
+    }
+  }, [jwtToken, levelNumber]);
+
+  useEffect(() => {
+    updateCurrentBest();
+  }, [updateCurrentBest]);
 
   const currentLevelState = useCallback(() => {
     return structuredClone(levelStateHistory[levelState]);
@@ -246,7 +265,10 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   return (
 
     <>
-      <div id="move-cnt">
+      <div className="move-display" id="cur-best">
+        {currentBest && `Current Best: ${currentBest}`}
+      </div>
+      <div className="move-display" id="move-cnt">
         Moves: {moveCnt}
       </div>
       <div 
