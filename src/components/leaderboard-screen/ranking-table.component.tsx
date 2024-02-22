@@ -25,7 +25,7 @@ export const RankingTable = ({ ranking }: { ranking: Ranking[] }) => {
 
   const tableRows = ranking.map(row => {
     return (
-      <tr>
+      <tr key={row.username}>
         <td>{row.username}</td>
         <td>{row.minNumOfMoves}</td>
       </tr>
@@ -34,11 +34,15 @@ export const RankingTable = ({ ranking }: { ranking: Ranking[] }) => {
 
   return (
     <table id="ranking-table">
-      <tr>
-        <th>Username</th>
-        <th>Minimum Number of Moves</th>
-      </tr>
-      {tableRows}
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Minimum Number of Moves</th>
+        </tr>
+      </thead>
+      <tbody>
+        {tableRows}
+      </tbody>
     </table>
   );
 }
