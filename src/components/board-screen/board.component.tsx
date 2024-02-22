@@ -17,6 +17,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
   const [moveCnt, setMoveCnt] = useState(0);
   const [boardHeight, setBoardHeight] = useState('');
   const [boardWidth, setBoardWidth] = useState('');
+  const [highlightCords, setHighlightCords] = useState<playerPos | null>(null);
   const jwtToken = useAppSelector(state => state.user.value);
   const squares: JSX.Element[] = [];
 
@@ -66,10 +67,17 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }, [level]);
 
-  
+  const resetHighlightCords = () => {
+    setHighlightCords(null);
+  }
+
   for (let i = 0; i < currentLevelState().length; i++) {
     for (let j = 0; j < currentLevelState()[0].length; j++) {
-      squares.push(<Square key={`${i}_${j}`} value={currentLevelState()[i][j]} />);
+      if (highlightCords && highlightCords.i === i && highlightCords.j === j) {
+        squares.push(<Square resetHighlightCords={resetHighlightCords} shouldHighlight={true} key={`${i}_${j}`} value={currentLevelState()[i][j]} />);
+      } else {
+        squares.push(<Square resetHighlightCords={resetHighlightCords} shouldHighlight={false} key={`${i}_${j}`} value={currentLevelState()[i][j]} />);
+      }
     }
   }
 
@@ -88,7 +96,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     }
   }
 
-  const handleMove = useCallback((dir: string, state: levelType, playerPos: playerPos): levelType | null => {
+  const handleMove = useCallback((dir: string, state: levelType, playerPos: playerPos): ({ state: levelType }| playerPos) & { isChanged: boolean } => {
     state = structuredClone(state);
     let a = 0, b = 0;
     if (dir === 'up'){
@@ -120,11 +128,18 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
         state[playerPos.i + a][playerPos.j + b] = SquareEnum.PLAYER_AT_VALID_SPACE;
       }
 
-      return state;
+      return {
+        isChanged: true,
+        state,
+      }
     }
     
     if (nextInDir === SquareEnum.WALL){
-      return null;
+      return {
+        isChanged: false,
+        i: playerPos.i + a,
+        j: playerPos.j + b
+      }
     }
     
     if (nextInDir === SquareEnum.BOX_AT_EMPTY_SPACE || nextInDir === SquareEnum.BOX_AT_VALID_SPACE){
@@ -148,17 +163,36 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
           state[playerPos.i][playerPos.j] = SquareEnum.VALID_SPACE;
         }
 
-        return state;
+        return {
+          isChanged: true,
+          state,
+        }
       }
-      return null;
+      return {
+        isChanged: false,
+        i: playerPos.i + (2 * a),
+        j: playerPos.j + (2 * b),
+      }
     }
-    return null;
+    return {
+      isChanged: false,
+      ...playerPos,
+    }
   }, []);
 
   const updateMove = useCallback((dir: string) => {
-    const updatedState = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
-    if (updatedState === null) return ;
+    const moveResult = handleMove(dir, currentLevelState(), findPlayerPosition(currentLevelState()) as playerPos);
+    if (!moveResult.isChanged) {
+      setHighlightCords({
+        i: (moveResult as playerPos & {isChanged: false}).i,
+        j: (moveResult as playerPos & {isChanged: false}).j,
+      })
+      return ;
+    }
 
+    setHighlightCords(null);
+
+    const updatedState = (moveResult as {state: levelType, isChanged: true}).state;
     const currentStateTillNow = levelStateHistory.slice(0, levelState + 1);
     currentStateTillNow.push(updatedState);
 
