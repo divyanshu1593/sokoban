@@ -251,6 +251,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
 
   const undoState = () => {
     if (levelState === 0 || hasWon) return ;
+
     setLevelState(levelState - 1);
     setMoveCnt(moveCnt - 1);
   }
@@ -259,6 +260,7 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
     if (levelState === levelStateHistory.length - 1) {
       return ;
     }
+
     setLevelState(levelState + 1);
     setMoveCnt(moveCnt + 1);
   }
@@ -283,8 +285,8 @@ export const Board = ({ level, levelNumber }: {level: levelType, levelNumber: nu
         {squares}
       </div>
       <div id="undo-redo-wraper">
-        <UndoBtn undoState={undoState} />
-        <RedoBtn redoState={redoState} />
+        <UndoBtn undoState={undoState} isDisabled={(levelState === 0 || hasWon)}/>
+        <RedoBtn redoState={redoState} isDisabled={(levelState === levelStateHistory.length - 1)} />
       </div>
       
       {hasWon && <div className='message'>You have won the game!</div>}
